@@ -9,7 +9,7 @@ pipelineConfig:
     release:
       pipeline:
         agent:
-          image: gcr.io/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
+          image: 9.46.76.93:5000/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
         stages:
           - name: release
             environment:
@@ -54,7 +54,7 @@ pipelineConfig:
                 command: helm
                 args: ['init','--client-only']
 
-              - image: gcr.io/jenkinsxio/builder-jx:0.1.639
+              - image: 9.46.76.93:5000/jenkinsxio/builder-jx:0.1.639
                 command: jx
                 args:
                   - step
@@ -66,7 +66,7 @@ pipelineConfig:
                   - -f
                   - /builder/home/git-token
 
-              - image: gcr.io/jenkinsxio/builder-jx:0.1.639
+              - image: 9.46.76.93:5000/jenkinsxio/builder-jx:0.1.639
                 command: jx
                 args:
                   - step
@@ -78,7 +78,7 @@ pipelineConfig:
                   - -f
                   - /builder/home/basic-auth-user
 
-              - image: gcr.io/jenkinsxio/builder-jx:0.1.639
+              - image: 9.46.76.93:5000/jenkinsxio/builder-jx:0.1.639
                 command: jx
                 args:
                   - step
@@ -90,7 +90,7 @@ pipelineConfig:
                   - -f
                   - /builder/home/basic-auth-pass
 
-              - image: gcr.io/jenkinsxio/builder-jx:0.1.639
+              - image: 9.46.76.93:5000/jenkinsxio/builder-jx:0.1.639
                 command: jx
                 args:
                   - step
@@ -106,18 +106,18 @@ pipelineConfig:
               - name: release
                 #image: docker.io/golang:1.11.5
                 # needs helm in the image for install_gitops_integration_test.go
-                image: gcr.io/jenkinsxio/builder-go:0.1.639
+                image: 9.46.76.93:5000/jenkinsxio/builder-go:0.1.639
                 command: make
                 args: ['release']
 
 
               - name: build-and-push-image
-                image: gcr.io/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
+                image: 9.46.76.93:5000/kaniko-project/executor:9912ccbf8d22bbafbf971124600fbb0b13b9cbd6
                 command: /kaniko/executor
-                args: ['--dockerfile=/workspace/source/Dockerfile','--destination=gcr.io/jenkinsxio/jx:${inputs.params.version}','--destination=gcr.io/jenkinsxio/jx:latest','--context=/workspace/source','--cache-dir=/workspace']
+                args: ['--dockerfile=/workspace/source/Dockerfile','--destination=9.46.76.93:5000/jenkinsxio/jx:${inputs.params.version}','--destination=9.46.76.93:5000/jenkinsxio/jx:latest','--context=/workspace/source','--cache-dir=/workspace']
 
               - name: release-charts
-                image: gcr.io/jenkinsxio/builder-go:0.1.639
+                image: 9.46.76.93:5000/jenkinsxio/builder-go:0.1.639
                 command: make
                 args:
                 - "release"
@@ -125,21 +125,21 @@ pipelineConfig:
                 - /workspace/source/charts/jx/Makefile
 
               - name: update-bot
-                image: gcr.io/jenkinsxio/builder-go:0.1.734
+                image: 9.46.76.93:5000/jenkinsxio/builder-go:0.1.734
                 command: ./jx/scripts/update-bot.sh
 
               #- name: distro
                 #image: docker.io/golang:1.11.5
                 # needs helm in the image for install_gitops_integration_test.go
-              #  image: gcr.io/jenkinsxio/builder-go:0.1.537
+              #  image: 9.46.76.93:5000/jenkinsxio/builder-go:0.1.537
               #  command: make
               #  args: ['release-distro']
 
               - name: update-docs
-                image: gcr.io/jenkinsxio/builder-go:0.1.639
+                image: 9.46.76.93:5000/jenkinsxio/builder-go:0.1.639
                 command: ./jx/scripts/update-website.sh
 
               - name: update-clients
                 # Needs maven as openapi tools are written in Java!
-                image: gcr.io/jenkinsxio/builder-maven:0.1.639
+                image: 9.46.76.93:5000/jenkinsxio/builder-maven:0.1.639
                 command: ./jx/scripts/update-clients.sh
